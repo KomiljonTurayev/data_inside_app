@@ -1,0 +1,33 @@
+services:
+  comfyui:
+    build:
+      context: .
+      dockerfile: Dockerfile.comfyui
+    ports:
+      - "8188:8188"
+    volumes:
+      - comfyui-models:/app/models/checkpoints
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - COMFYUI_HOST=comfyui
+      - COMFYUI_PORT=8188
+      - FLASK_HOST=0.0.0.0
+      - FLASK_PORT=8080
+    depends_on:
+      - comfyui
+    volumes:
+      - generated-images:/app/app/static/images/generated
+      - outputs:/app/outputs
+    restart: unless-stopped
+
+volumes:
+  comfyui-models:
+  generated-images:
+  outputs:

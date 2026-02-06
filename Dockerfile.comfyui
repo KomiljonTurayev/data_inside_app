@@ -1,0 +1,20 @@
+FROM python:3.12.8-slim
+
+WORKDIR /app
+
+# Install git (needed for ComfyUI setup)
+RUN apt-get update && apt-get install -y --no-install-recommends git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Clone ComfyUI
+RUN git clone https://github.com/comfyanonymous/ComfyUI.git /app
+
+# Install ComfyUI dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Create model directory
+RUN mkdir -p models/checkpoints
+
+EXPOSE 8188
+
+CMD ["python", "main.py", "--cpu", "--listen", "0.0.0.0"]

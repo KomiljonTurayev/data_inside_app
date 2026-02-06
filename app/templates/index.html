@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Generate Cover Art{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Alternative Cover Art Generator</h1>
+    <p>Generate AI-powered book, movie, and music album cover art using Stable Diffusion</p>
+</div>
+
+<div class="generator-layout">
+    <!-- Left: Controls -->
+    <div class="controls-panel">
+        <h2>Generation Settings</h2>
+
+        <!-- Preset selection -->
+        <div class="form-group">
+            <label for="cover-type">Cover Type Preset</label>
+            <select id="cover-type">
+                <option value="">-- Custom --</option>
+                {% for key, preset in presets.items() %}
+                <option value="{{ key }}">{{ preset.name }} ({{ key | capitalize }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Prompts -->
+        <div class="form-group">
+            <label for="positive-prompt">Positive Prompt</label>
+            <textarea id="positive-prompt" rows="4" placeholder="Describe the cover art you want to generate..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="negative-prompt">Negative Prompt</label>
+            <textarea id="negative-prompt" rows="2" placeholder="What to avoid in the image...">blurry, low quality, deformed, misspelled text</textarea>
+        </div>
+
+        <!-- Advanced settings (collapsible) -->
+        <details class="advanced-settings">
+            <summary>Advanced KSampler Settings</summary>
+            <div class="settings-grid">
+                <div class="form-group">
+                    <label for="seed">Seed</label>
+                    <input type="number" id="seed" value="{{ ksampler.seed }}">
+                </div>
+                <div class="form-group">
+                    <label for="steps">Steps</label>
+                    <input type="number" id="steps" value="{{ ksampler.steps }}" min="1" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="cfg-scale">CFG Scale</label>
+                    <input type="number" id="cfg-scale" value="{{ ksampler.cfg_scale }}" min="1" max="30" step="0.5">
+                </div>
+                <div class="form-group">
+                    <label for="width">Width</label>
+                    <input type="number" id="width" value="{{ ksampler.width }}" min="256" max="1024" step="64">
+                </div>
+                <div class="form-group">
+                    <label for="height">Height</label>
+                    <input type="number" id="height" value="{{ ksampler.height }}" min="256" max="1024" step="64">
+                </div>
+            </div>
+        </details>
+
+        <div class="button-group">
+            <button id="btn-generate" class="btn btn-primary">Generate Cover Art</button>
+            <button id="btn-export-workflow" class="btn btn-secondary">Export Workflow JSON</button>
+        </div>
+    </div>
+
+    <!-- Right: Result -->
+    <div class="result-panel">
+        <h2>Generated Image</h2>
+        <div id="image-container" class="image-container">
+            <div id="placeholder" class="placeholder">
+                <p>Your generated cover art will appear here.</p>
+                <p class="hint">Select a preset or enter a custom prompt, then click Generate.</p>
+            </div>
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p id="loading-message">Loading model...</p>
+            </div>
+            <img id="generated-image" class="generated-image hidden" alt="Generated cover art">
+        </div>
+        <div id="image-meta" class="image-meta hidden">
+            <table>
+                <tr><td>Generation Time</td><td id="meta-time"></td></tr>
+                <tr><td>Seed</td><td id="meta-seed"></td></tr>
+                <tr><td>Steps</td><td id="meta-steps"></td></tr>
+                <tr><td>CFG Scale</td><td id="meta-cfg"></td></tr>
+                <tr><td>Resolution</td><td id="meta-res"></td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const PRESETS = {{ presets | tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

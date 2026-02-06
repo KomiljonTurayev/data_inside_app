@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cover Art Generator{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="/">Cover Art Generator</a>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="{% if request.path == '/' %}active{% endif %}">Generate</a>
+            <a href="/gallery" class="{% if request.path == '/gallery' %}active{% endif %}">Gallery</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>Capstone Project 2 &mdash; Alternative Cover Art Generation</p>
+        <p>Powered by ComfyUI + DreamShaper 8 (Stable Diffusion 1.5) &bull; Self-hosted AI Solution</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Gallery - Cover Art Generator{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Generated Cover Art Gallery</h1>
+    <p>Browse all previously generated cover art images</p>
+</div>
+
+{% if images %}
+<div class="gallery-grid">
+    {% for img in images %}
+    <div class="gallery-card">
+        <img src="{{ img.path }}" alt="{{ img.filename }}" loading="lazy">
+        <div class="gallery-card-info">
+            <span class="filename">{{ img.filename }}</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p>No images generated yet.</p>
+    <a href="/" class="btn btn-primary">Generate Your First Cover</a>
+</div>
+{% endif %}
+{% endblock %}
